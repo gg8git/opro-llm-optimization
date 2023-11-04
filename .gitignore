@@ -1,5 +1,8 @@
 # passwords and keys
-keys.py
+lin-reg/keys.py
+
+# testing notebook
+test.ipynb
 
 # pycache
 lin-reg/__pycache__
