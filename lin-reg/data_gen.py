@@ -18,6 +18,6 @@ def multid_data_gen(wdim,lbound,ubound,nx):
 
     xs = np.array([np.random.uniform(1, (nx+1), wdim) for _ in range(nx)])
     ys = [(np.sum([(xi*wi) for xi in x for wi in w]) + b + np.random.normal(0, 1)) for x in xs]
-    coords = pd.DataFrame({'xs': xs, 'ys': ys})
+    coords = pd.DataFrame({'xs': [x for x in xs], 'ys': ys})
 
     return {'weights': w, 'intercept': b, 'coords': coords}
