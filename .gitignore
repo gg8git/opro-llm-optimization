@@ -1,5 +1,6 @@
 # passwords and keys
 lin-reg/keys.py
+tsp/keys.py
 
 # testing notebook
 test.ipynb

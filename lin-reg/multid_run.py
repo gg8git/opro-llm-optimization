@@ -14,11 +14,11 @@ coords = data['coords']
 
 performance_df = pd.DataFrame({'input':[], 'error':[]})
 
-def init_instructions(performance_df,dim,init_value=15,n_training_samples=12):
+def init_pairs(performance_df,dim,init_value=15,n_training_samples=12):
     init_pairs = [f'[{[init_value for _ in range(dim)]},{init_value}]',f'[{[init_value+5 for _ in range(dim)]},{init_value+5}]',f'[{[init_value-5 for _ in range(dim)]},{init_value-5}]',f'[{[init_value+5 for _ in range(dim)]},{init_value-5}]',f'[{[init_value-5 for _ in range(dim)]},{init_value+5}]']
     return score_pairs(init_pairs,dim,coords,n_training_samples,performance_df)
 
-def rank_instructions(performance_df,num_scores):
+def rank_pairs(performance_df,num_scores):
     performance_df = performance_df.sort_values(by='error')
     performance_df = performance_df.drop_duplicates(subset=['input'])
     performance_df = performance_df[::-1]
@@ -68,16 +68,16 @@ def score_pairs(npairs,dim,training_data,n_training_samples,performance_df):
     return performance_df
 
 def opro(performance_df,dim,prompt_template,n_scores=32,n_prompts=12,n_training_samples=12,max_iterations=15):
-    performance_df = rank_instructions(performance_df,n_scores)
+    performance_df = rank_pairs(performance_df,n_scores)
     for _ in range(max_iterations):
         pairs_and_scores = build_pairs_and_scores(performance_df)
         npairs = generate_prompts(prompt_template,dim,pairs_and_scores,n_prompts,temperature=0)
         print(f'opro loop generated: {npairs}')
         performance_df = score_pairs(npairs,dim,coords,n_training_samples,performance_df)
-        performance_df = rank_instructions(performance_df,n_scores)
+        performance_df = rank_pairs(performance_df,n_scores)
     return performance_df
 
-performance_df = init_instructions(performance_df,dim,init_value=15,n_training_samples=12)
+performance_df = init_pairs(performance_df,dim,init_value=15,n_training_samples=12)
 
 performance_df = opro(performance_df,dim,multid_meta_prompt,n_scores=12,n_prompts=3,n_training_samples=12,max_iterations=20)
 
